@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dr. Dwayne Jackson Podcast Live Ops</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-50 text-slate-900">
+  <div id="root" class="min-h-screen"></div>
+  <script type="text/babel">
+    function App() {
+      return (
+        <div className='p-8 max-w-4xl mx-auto'>
+          <h1 className='text-4xl font-bold mb-4'>Dr. Dwayne Jackson Podcast Live Ops</h1>
+          <p className='text-slate-700 mb-6'>
+            The live-ops dashboard for tracking episodes, platforms, thumbnails, and social content.
+          </p>
+          <p className='text-sm text-slate-500'>
+            This simplified version runs directly from GitHub Pages using React and Tailwind.
+          </p>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
