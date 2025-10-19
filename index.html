@@ -1,33 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dr. Dwayne Jackson Podcast Live Ops</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dr. Dwayne Jackson Podcast — Live Ops</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-50 text-slate-900">
-  <div id="root" class="min-h-screen"></div>
-  <script type="text/babel">
-    function App() {
-      return (
-        <div className='p-8 max-w-4xl mx-auto'>
-          <h1 className='text-4xl font-bold mb-4'>Dr. Dwayne Jackson Podcast Live Ops</h1>
-          <p className='text-slate-700 mb-6'>
-            The live-ops dashboard for tracking episodes, platforms, thumbnails, and social content.
-          </p>
-          <p className='text-sm text-slate-500'>
-            This simplified version runs directly from GitHub Pages using React and Tailwind.
-          </p>
-        </div>
-      );
-    }
+<body class="bg-gray-50">
+  <div id="root"></div>
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+  <script type="text/babel">
+    const { useEffect, useMemo, useState } = React;
+
+    // ---------- Helpers
+    const STORAGE_KEY = "drjackson_podcast_live_ops_v1";
+    const clsx = (...v) => v.filter(Boolean).join(" ");
+    const fmtDateISO = (d) => {
+      const dt = new Date(d);
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth()+1).padStart(2,"0");
+      const day = String(dt.getDate()).padStart(2,"0");
+      return `${y}-${m}-${day}`;
+    };
+    const nextTuesday = (fromDate) => {
+      const d = new Date(fromDate);
+      const day = d.getDay(); // 0 Sun
+      const diff = (9 - day) % 7; // to next Tue
+      d.setDate(d.getDate() + (diff === 0 ? 7 : diff));
+      return d;
+    };
+    const toLocalMidnightISO = (dateStr) => {
+      const d = new Date(dateStr);
+      d.setHours(0,0,0,0);
+      return fmtDateISO(d);
+    };
+    const csvLine = (arr) =>
+      arr.map((v) => {
+        const s = String(v ?? "");
+        const q = s.replace(/"/g,'""');
+        return `"${q}"`;
+      }).join(",");
+    const downloadFile = (name, text) => {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // -----
